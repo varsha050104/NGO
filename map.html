@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Connect - Maps</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .maps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .map-section {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-container {
+            height: 500px;
+            width: 100%;
+        }
+
+        .map-legend {
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #388e3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Help Connect - Connecting Needs with Resources</h1>
+
+        <div class="maps-container">
+            <!-- Seeker Map Section -->
+            <div class="map-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-search"></i> Help Seekers Map</h2>
+                    <span>Showing needs across Bangalore</span>
+                </div>
+                <div id="seekerMap" class="map-container"></div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF5252;"></div>
+                        <span>High Priority Need</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FFC107;"></div>
+                        <span>Medium Priority Need</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4CAF50;"></div>
+                        <span>Low Priority Need</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donor Map Section -->
+            <div class="map-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-hand-holding-heart"></i> Donors Map</h2>
+                    <span>Available resources and help providers</span>
+                </div>
+                <div id="donorMap" class="map-container"></div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2196F3;"></div>
+                        <span>Food Donors</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #673AB7;"></div>
+                        <span>Clothing Donors</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #E91E63;"></div>
+                        <span>Financial Support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Detail Modal -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Help Request Details</h3>
+                <button class="close-btn" onclick="closeRequestModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <h4>Food Request</h4>
+                <p><strong>Need Level:</strong> High</p>
+                <p><strong>Location:</strong> Koramangala, Bangalore</p>
+                <p><strong>Details:</strong> Family of 4 needing food assistance for a week due to temporary financial
+                    difficulties.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn">Offer Help</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Maps JavaScript API -->
+    <script>
+        // Function to open the request detail modal
+        function openRequestModal(id) {
+            document.getElementById('requestModal').style.display = 'flex';
+        }
+
+        // Function to close the request detail modal
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            let modal = document.getElementById('requestModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize Google Maps
+        function initMaps() {
+            // Seeker Map
+            initSeekerMap();
+
+            // Donor Map
+            initDonorMap();
+        }
+
+        function initSeekerMap() {
+            // Bangalore center coordinates
+            const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
+
+            // Create map
+            const seekerMap = new google.maps.Map(document.getElementById("seekerMap"), {
+                zoom: 12,
+                center: bangaloreCenter,
+                styles: [
+                    {
+                        "featureType": "administrative",
+                        "elementType": "labels.text.fill",
+                        "stylers": [{ "color": "#444444" }]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "all",
+                        "stylers": [{ "color": "#f2f2f2" }]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "all",
+                        "stylers": [{ "saturation": -100 }, { "lightness": 45 }]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "simplified" }]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "labels.icon",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": [{ "color": "#c4c4c4" }, { "visibility": "on" }]
+                    }
+                ]
+            });
+
+            // Seeker locations with need levels
+            const seekerLocations = [
+                { position: { lat: 12.9352, lng: 77.6245 }, needLevel: 'high', requestType: 'Food' },
+                { position: { lat: 12.9698, lng: 77.7499 }, needLevel: 'medium', requestType: 'Clothing' },
+                { position: { lat: 13.0298, lng: 77.5762 }, needLevel: 'high', requestType: 'Medical' },
+                { position: { lat: 12.9121, lng: 77.6446 }, needLevel: 'low', requestType: 'Education' },
+                { position: { lat: 12.9767, lng: 77.5713 }, needLevel: 'medium', requestType: 'Financial' },
+                { position: { lat: 13.0231, lng: 77.6821 }, needLevel: 'high', requestType: 'Food' },
+                { position: { lat: 12.8988, lng: 77.5764 }, needLevel: 'medium', requestType: 'Medical' },
+                { position: { lat: 12.9390, lng: 77.6898 }, needLevel: 'high', requestType: 'Food' },
+                { position: { lat: 12.9550, lng: 77.6556 }, needLevel: 'low', requestType: 'Clothing' },
+                { position: { lat: 12.9299, lng: 77.6848 }, needLevel: 'medium', requestType: 'Financial' }
+            ];
+
+            // Add markers for each seeker location
+            seekerLocations.forEach(location => {
+                let markerColor;
+
+                // Set marker color based on need level
+                switch (location.needLevel) {
+                    case 'high':
+                        markerColor = '#FF5252'; // Red
+                        break;
+                    case 'medium':
+                        markerColor = '#FFC107'; // Amber
+                        break;
+                    case 'low':
+                        markerColor = '#4CAF50'; // Green
+                        break;
+                    default:
+                        markerColor = '#2196F3'; // Blue
+                }
+
+                // Create marker
+                const marker = new google.maps.Marker({
+                    position: location.position,
+                    map: seekerMap,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillColor: markerColor,
+                        fillOpacity: 0.8,
+                        strokeColor: '#FFF',
+                        strokeWeight: 1,
+                        scale: 10
+                    },
+                    title: `${location.requestType} Request (${location.needLevel} need)`
+                });
+
+                // Add info window with details
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 5px; font-size: 16px;">${location.requestType} Request</h3>
+                            <p style="margin: 0 0 5px;"><strong>Need Level:</strong> ${location.needLevel.charAt(0).toUpperCase() + location.needLevel.slice(1)}</p>
+                            <p style="margin: 0;"><a href="#" onclick="openRequestModal(1); return false;" style="color: #4CAF50; text-decoration: none;">View Details</a></p>
+                        </div>
+                    `
+                });
+
+                // Open info window on marker click
+                marker.addListener('click', () => {
+                    infoWindow.open(seekerMap, marker);
+                });
+            });
+        }
+
+        function initDonorMap() {
+            // Bangalore center coordinates
+            const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
+
+            // Create map
+            const donorMap = new google.maps.Map(document.getElementById("donorMap"), {
+                zoom: 12,
+                center: bangaloreCenter,
+                styles: [
+                    {
+                        "featureType": "administrative",
+                        "elementType": "labels.text.fill",
+                        "stylers": [{ "color": "#444444" }]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "all",
+                        "stylers": [{ "color": "#f2f2f2" }]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "all",
+                        "stylers": [{ "saturation": -100 }, { "lightness": 45 }]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "simplified" }]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "labels.icon",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "all",
+                        "stylers": [{ "visibility": "off" }]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": [{ "color": "#c4c4c4" }, { "visibility": "on" }]
+                    }
+                ]
+            });
+
+            // Donor locations with types
+            const donorLocations = [
+                { position: { lat: 12.9852, lng: 77.6245 }, donorType: 'Food', name: 'Akshaya Patra Foundation' },
+                { position: { lat: 12.9598, lng: 77.6099 }, donorType: 'Clothing', name: 'Goonj Bangalore Chapter' },
+                { position: { lat: 13.0598, lng: 77.5962 }, donorType: 'Financial', name: 'Karnataka Bank Trust' },
+                { position: { lat: 12.9321, lng: 77.6146 }, donorType: 'Food', name: 'Feeding India Bangalore' },
+                { position: { lat: 12.9967, lng: 77.7513 }, donorType: 'Clothing', name: 'Share At Door Step' },
+                { position: { lat: 13.0631, lng: 77.5821 }, donorType: 'Financial', name: 'Rotary Club Bangalore' },
+                { position: { lat: 12.9788, lng: 77.6408 }, donorType: 'Food', name: 'Annakshetra Foundation' },
+                { position: { lat: 12.8990, lng: 77.5864 }, donorType: 'Clothing', name: 'Clothes Box Foundation' },
+                { position: { lat: 12.9290, lng: 77.5898 }, donorType: 'Financial', name: 'United Way Bangalore' },
+                { position: { lat: 12.9750, lng: 77.6838 }, donorType: 'Food', name: 'Robin Hood Army' }
+            ];
+
+            // Add markers for each donor location
+            donorLocations.forEach(location => {
+                let markerColor, markerIcon;
+
+                // Set marker color based on donor type
+                switch (location.donorType) {
+                    case 'Food':
+                        markerColor = '#2196F3'; // Blue
+                        markerIcon = 'fas fa-utensils';
+                        break;
+                    case 'Clothing':
+                        markerColor = '#673AB7'; // Purple
+                        markerIcon = 'fas fa-tshirt';
+                        break;
+                    case 'Financial':
+                        markerColor = '#E91E63'; // Pink
+                        markerIcon = 'fas fa-rupee-sign';
+                        break;
+                    default:
+                        markerColor = '#4CAF50'; // Green
+                        markerIcon = 'fas fa-hand-holding-heart';
+                }
+
+                // Create marker
+                const marker = new google.maps.Marker({
+                    position: location.position,
+                    map: donorMap,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillColor: markerColor,
+                        fillOpacity: 0.8,
+                        strokeColor: '#FFF',
+                        strokeWeight: 1,
+                        scale: 10
+                    },
+                    title: `${location.name} (${location.donorType})`
+                });
+
+                // Add info window with details
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 5px; font-size: 16px;">${location.name}</h3>
+                            <p style="margin: 0 0 5px;"><strong>Donor Type:</strong> ${location.donorType}</p>
+                            <p style="margin: 0;"><a href="#" style="color: #4CAF50; text-decoration: none;">View Profile</a></p>
+                        </div>
+                    `
+                });
+
+                // Open info window on marker click
+                marker.addListener('click', () => {
+                    infoWindow.open(donorMap, marker);
+                });
+            });
+        }
+    </script>
+
+    <!-- Google Maps API with Your API Key (Replace YOUR_ACTUAL_API_KEY with your real API key) -->
+    <script src="https://console.cloud.google.com/" async defer>
+
+
+    </script>
+</body>
+
+</html>
