@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Assistance - NGO Donation Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-color-rgb: 52, 152, 219;
+            --secondary-color: #7f8c8d;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .request-form-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group select {
+            background-color: white;
+        }
+
+        .form-group .help-text {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        @media (max-width: 576px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: normal;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+        }
+
+        .radio-group input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-upload .upload-btn {
+            display: inline-block;
+            background-color: #f5f5f5;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload .upload-btn:hover {
+            background-color: #eee;
+            border-color: #ccc;
+        }
+
+        .file-upload .upload-btn i {
+            font-size: 24px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn.primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn.secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn.secondary:hover {
+            background-color: #6d7b7c;
+        }
+
+        .btn.outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn.outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.25rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-list li i {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .request-type-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: #eee;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-banner {
+            background-color: var(--success-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .required-field::after {
+            content: "*";
+            color: var(--danger-color);
+            margin-left: 4px;
+        }
+
+        .steps-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step::before {
+            content: "";
+            height: 2px;
+            width: 100%;
+            background-color: #ddd;
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            z-index: 1;
+        }
+
+        .step:last-child::before {
+            display: none;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .step.completed .step-label {
+            color: var(--success-color);
+        }
+
+        .testimonial {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            background-color: #f5f9ff;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-name {
+            font-weight: 500;
+        }
+
+        .testimonial-location {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Navigation and Footer styles */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            color: var(--primary-color);
+        }
+
+        .login-btn,
+        .register-btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+        }
+
+        .login-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .register-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+            padding-right: 20px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .newsletter-form button {
+            border-radius: 0 4px 4px 0;
+            padding: 10px 15px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+            }
+
+            .footer-section {
+                width: 100%;
+                padding-right: 0;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .copyright {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <img src="logo-placeholder.png" alt="NGO Donation Bridge Logo">
+            <h1>NGO Donation Bridge</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="requests.html" class="active">Requests</a></li>
+            <li><a href="transparency.html">Transparency</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="login.html" class="login-btn">Login</a></li>
+            <li><a href="register.html" class="register-btn">Register</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <div class="request-form-container">
+        <div class="page-header">
+            <h1>Request Assistance</h1>
+            <p>If you or your community are in need of food or financial support, please fill out this form. Our network
+                of donors and NGOs will review your request and provide assistance when possible.</p>
+        </div>
+
+        <div class="success-banner" id="successBanner">
+            Your request has been submitted successfully! We will review your request and contact you soon.
+        </div>
+
+        <div class="request-type-tabs">
+            <button class="tab-btn active" data-tab="food-request">Food Assistance</button>
+            <button class="tab-btn" data-tab="money-request">Financial Aid</button>
+        </div>
+
+        <div class="form-grid">
+            <div class="main-form">
+                <div class="steps-indicator">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal Info</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Request Details</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Documentation</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Review & Submit</div>
+                    </div>
+                </div>
+
+                <!-- Food Request Form -->
+                <div class="tab-content active" id="food-request">
+                    <form id="foodRequestForm">
+                        <div class="form-section">
+                            <h2>Personal Information</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="food-first-name" class="required-field">First Name</label>
+                                    <input type="text" id="food-first-name" name="firstName" required>
+                                    <div class="error-message">First name is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="food-last-name" class="required-field">Last Name</label>
+                                    <input type="text" id="food-last-name" name="lastName" required>
+                                    <div class="error-message">Last name is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="food-email" class="required-field">Email Address</label>
+                                    <input type="email" id="food-email" name="email" required>
+                                    <div class="error-message">Valid email is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="food-phone" class="required-field">Phone Number</label>
+                                    <input type="tel" id="food-phone" name="phone" required>
+                                    <div class="error-message">Phone number is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-address" class="required-field">Address</label>
+                                <textarea id="food-address" name="address" required></textarea>
+                                <div class="error-message">Address is required</div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="food-city" class="required-field">City</label>
+                                    <input type="text" id="food-city" name="city" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="food-country" class="required-field">Country</label>
+                                    <select id="food-country" name="country" required>
+                                        <option value="">Select Country</option>
+                                        <option value="Kenya">Kenya</option>
+                                        <option value="Uganda">Uganda</option>
+                                        <option value="Tanzania">Tanzania</option>
+                                        <option value="Ethiopia">Ethiopia</option>
+                                        <option value="Nigeria">Nigeria</option>
+                                        <option value="India">India</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="Philippines">Philippines</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Food Assistance Details</h2>
+                            <div class="form-group">
+                                <label class="required-field">Type of Food Assistance Needed</label>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="staple-foods">
+                                        Staple Foods (Rice, Flour, Grains)
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="canned-goods">
+                                        Canned Goods & Non-perishables
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="baby-food">
+                                        Baby Food & Formula
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="fresh-produce">
+                                        Fresh Produce
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="ready-meals">
+                                        Ready-to-eat Meals
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="foodType" value="other">
+                                        Other (please specify)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-other-specify">If Other, please specify</label>
+                                <input type="text" id="food-other-specify" name="otherFoodSpecify">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-quantity" class="required-field">Approximate Quantity Needed</label>
+                                <select id="food-quantity" name="quantity" required>
+                                    <option value="">Select Quantity</option>
+                                    <option value="individual">Individual (1 person)</option>
+                                    <option value="family-small">Small Family (2-4 people)</option>
+                                    <option value="family-large">Large Family (5+ people)</option>
+                                    <option value="community-small">Small Community (10-50 people)</option>
+                                    <option value="community-large">Large Community (50+ people)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">How urgent is this request?</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="urgency" value="immediate" required>
+                                        Immediate (Within 24-48 hours)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="urgency" value="urgent">
+                                        Urgent (Within one week)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="urgency" value="planned">
+                                        Planned (Within one month)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-duration" class="required-field">Duration of Assistance Needed</label>
+                                <select id="food-duration" name="duration" required>
+                                    <option value="">Select Duration</option>
+                                    <option value="one-time">One-time assistance</option>
+                                    <option value="short-term">Short-term (1-3 months)</option>
+                                    <option value="medium-term">Medium-term (3-6 months)</option>
+                                    <option value="long-term">Long-term (6+ months)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-reason" class="required-field">Reason for Request</label>
+                                <textarea id="food-reason" name="reason"
+                                    placeholder="Please explain your current situation and why you need assistance..."
+                                    required></textarea>
+                                <div class="error-message">Please explain your situation</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Additional Information</h2>
+                            <div class="form-group">
+                                <label class="required-field">Have you received food assistance before?</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="previousAssistance" value="yes" required>
+                                        Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="previousAssistance" value="no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-previous-details">If yes, please provide details</label>
+                                <textarea id="food-previous-details" name="previousDetails"
+                                    placeholder="When, from which organization, what type of assistance..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">Are you currently receiving any other form of
+                                    assistance?</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="currentAssistance" value="yes" required>
+                                        Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="currentAssistance" value="no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-current-details">If yes, please provide details</label>
+                                <textarea id="food-current-details" name="currentDetails"
+                                    placeholder="Type of assistance, from which organization..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-dietary-restrictions">Any dietary restrictions or specific food
+                                    requirements?</label>
+                                <textarea id="food-dietary-restrictions" name="dietaryRestrictions"
+                                    placeholder="Religious restrictions, allergies, medical diet requirements..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Documentation</h2>
+                            <p>Please upload any relevant documents that may support your request. This could include
+                                ID, proof of address, medical documentation, etc.</p>
+
+                            <div class="form-group">
+                                <label for="food-id-proof">Identification Document</label>
+                                <input type="file" id="food-id-proof" name="idProof">
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-address-proof">Proof of Address</label>
+                                <input type="file" id="food-address-proof" name="addressProof">
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="food-supporting-docs">Other Supporting Documents</label>
+                                <input type="file" id="food-supporting-docs" name="supportingDocs" multiple>
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB each, up to 3 files)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Verification & Submission</h2>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="terms" required>
+                                    I confirm that all information provided is true and accurate to the best of my
+                                    knowledge.
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="consent" required>
+                                    I consent to the use of this information for the purpose of processing my assistance
+                                    request.
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="contact-consent">
+                                    I agree to be contacted about other potential assistance programs and opportunities.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="
+
+                            <button type=" button" class="btn outline">Save as Draft</button>
+                            <button type="submit" class="btn primary">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Financial Aid Request Form -->
+                <div class="tab-content" id="money-request">
+                    <form id="moneyRequestForm">
+                        <div class="form-section">
+                            <h2>Personal Information</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="money-first-name" class="required-field">First Name</label>
+                                    <input type="text" id="money-first-name" name="firstName" required>
+                                    <div class="error-message">First name is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="money-last-name" class="required-field">Last Name</label>
+                                    <input type="text" id="money-last-name" name="lastName" required>
+                                    <div class="error-message">Last name is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="money-email" class="required-field">Email Address</label>
+                                    <input type="email" id="money-email" name="email" required>
+                                    <div class="error-message">Valid email is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="money-phone" class="required-field">Phone Number</label>
+                                    <input type="tel" id="money-phone" name="phone" required>
+                                    <div class="error-message">Phone number is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-address" class="required-field">Address</label>
+                                <textarea id="money-address" name="address" required></textarea>
+                                <div class="error-message">Address is required</div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="money-city" class="required-field">City</label>
+                                    <input type="text" id="money-city" name="city" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="money-country" class="required-field">Country</label>
+                                    <select id="money-country" name="country" required>
+                                        <option value="">Select Country</option>
+                                        <option value="Kenya">Kenya</option>
+                                        <option value="Uganda">Uganda</option>
+                                        <option value="Tanzania">Tanzania</option>
+                                        <option value="Ethiopia">Ethiopia</option>
+                                        <option value="Nigeria">Nigeria</option>
+                                        <option value="India">India</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="Philippines">Philippines</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Financial Aid Details</h2>
+                            <div class="form-group">
+                                <label class="required-field">Purpose of Financial Assistance</label>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="housing">
+                                        Housing/Rent/Utilities
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="medical">
+                                        Medical Expenses
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="education">
+                                        Education Fees
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="business">
+                                        Small Business Support
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="disaster">
+                                        Disaster Recovery
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="aidPurpose" value="other">
+                                        Other (please specify)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-other-specify">If Other, please specify</label>
+                                <input type="text" id="money-other-specify" name="otherAidSpecify">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-amount" class="required-field">Amount Requested (USD)</label>
+                                <input type="number" id="money-amount" name="amountRequested" min="1" max="10000"
+                                    required>
+                                <div class="help-text">Please enter amount in USD (maximum request: $10,000)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">How urgent is this request?</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="urgency" value="immediate" required>
+                                        Immediate (Within 24-48 hours)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="urgency" value="urgent">
+                                        Urgent (Within one week)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="urgency" value="planned">
+                                        Planned (Within one month)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-reason" class="required-field">Reason for Request</label>
+                                <textarea id="money-reason" name="reason"
+                                    placeholder="Please explain your current situation and why you need financial assistance..."
+                                    required></textarea>
+                                <div class="error-message">Please explain your situation</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Financial Information</h2>
+                            <div class="form-group">
+                                <label for="money-income" class="required-field">Monthly Household Income (USD)</label>
+                                <input type="number" id="money-income" name="monthlyIncome" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-expenses" class="required-field">Monthly Expenses (USD)</label>
+                                <input type="number" id="money-expenses" name="monthlyExpenses" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-dependents" class="required-field">Number of Dependents</label>
+                                <input type="number" id="money-dependents" name="dependents" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">Have you received financial assistance before?</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="previousAssistance" value="yes" required>
+                                        Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="previousAssistance" value="no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-previous-details">If yes, please provide details</label>
+                                <textarea id="money-previous-details" name="previousDetails"
+                                    placeholder="When, from which organization, amount received..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-bank-info">Bank Information (Optional)</label>
+                                <textarea id="money-bank-info" name="bankInfo"
+                                    placeholder="Bank name, account number, routing information..."></textarea>
+                                <div class="help-text">This information will be used only if your request is approved.
+                                    We follow strict security protocols to protect your data.</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Documentation</h2>
+                            <p>Please upload any relevant documents that may support your request.</p>
+
+                            <div class="form-group">
+                                <label for="money-id-proof">Identification Document</label>
+                                <input type="file" id="money-id-proof" name="idProof">
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-income-proof">Proof of Income/Financial Situation</label>
+                                <input type="file" id="money-income-proof" name="incomeProof">
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-expense-proof">Proof of Expenses/Need</label>
+                                <input type="file" id="money-expense-proof" name="expenseProof">
+                                <div class="help-text">Bills, invoices, medical receipts, etc. Accepted formats: PDF,
+                                    JPG, PNG (max 5MB)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="money-supporting-docs">Other Supporting Documents</label>
+                                <input type="file" id="money-supporting-docs" name="supportingDocs" multiple>
+                                <div class="help-text">Accepted formats: PDF, JPG, PNG (max 5MB each, up to 3 files)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>Verification & Submission</h2>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="terms" required>
+                                    I confirm that all information provided is true and accurate to the best of my
+                                    knowledge.
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="consent" required>
+                                    I consent to the use of this information for the purpose of processing my assistance
+                                    request.
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="verification-consent" required>
+                                    I understand that the NGO Donation Bridge may need to verify my information before
+                                    approving assistance.
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="contact-consent">
+                                    I agree to be contacted about other potential assistance programs and opportunities.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn outline">Save as Draft</button>
+                            <button type="submit" class="btn primary">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3>How It Works</h3>
+                    <ul class="info-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>Complete this form with accurate information about your needs</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-file-alt"></i>
+                            <div>Our team reviews your request within 2-3 business days</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-comments"></i>
+                            <div>We may contact you for additional information</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-handshake"></i>
+                            <div>If approved, we connect you with appropriate donors or NGOs</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-gift"></i>
+                            <div>Receive assistance based on availability and match with donors</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Tips for a Successful Request</h3>
+                    <ul class="info-list">
+                        <li>
+                            <i class="fas fa-info-circle"></i>
+                            <div>Be specific about your needs and situation</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-info-circle"></i>
+                            <div>Provide all required documentation to speed up processing</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-info-circle"></i>
+                            <div>Be realistic about the assistance you're requesting</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-info-circle"></i>
+                            <div>Answer all questions honestly and completely</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-card testimonial">
+                    <div class="testimonial-content">
+                        "The NGO Donation Bridge helped my family receive food assistance when we needed it most after
+                        flooding destroyed our home. The process was dignified and the support made a real difference in
+                        our lives."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">
+                            <img src="avatar-placeholder.jpg" alt="Testimonial Avatar">
+                        </div>
+                        <div>
+                            <div class="testimonial-name">Maria C.</div>
+                            <div class="testimonial-location">Philippines</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>NGO Donation Bridge connects people in need with donors and aid organizations around the world. We
+                    believe in transparency, efficiency, and dignity for all.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="requests.html">Request Assistance</a></li>
+                    <li><a href="transparency.html">Transparency</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Success Stories</a></li>
+                    <li><a href="#">Partner Organizations</a></li>
+                    <li><a href="#">Volunteer</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p>Stay updated on our impact and opportunities to help.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email Address" required>
+                    <button type="submit" class="btn primary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="copyright">
+                &copy; 2025 NGO Donation Bridge. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Form validation
+            const foodForm = document.getElementById('foodRequestForm');
+            const moneyForm = document.getElementById('moneyRequestForm');
+
+            if (foodForm) {
+                foodForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    if (validateForm(this)) {
+                        // Show success message
+                        document.getElementById('successBanner').style.display = 'block';
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // Reset form
+                        this.reset();
+                    }
+                });
+            }
+
+            if (moneyForm) {
+                moneyForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    if (validateForm(this)) {
+                        // Show success message
+                        document.getElementById('successBanner').style.display = 'block';
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // Reset form
+                        this.reset();
+                    }
+                });
+            }
+
+            function validateForm(form) {
+                let isValid = true;
+
+                // Check required fields
+                const requiredFields = form.querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+
+                        // Show error message if exists
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.style.display = 'block';
+                        }
+                    } else {
+                        field.classList.remove('error');
+
+                        // Hide error message if exists
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Check email format
+                const emailFields = form.querySelectorAll('input[type="email"]');
+                emailFields.forEach(field => {
+                    if (field.value && !validateEmail(field.value)) {
+                        isValid = false;
+                        field.classList.add('error');
+
+                        // Show error message if exists
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.style.display = 'block';
+                        }
+                    }
+                });
+
+                return isValid;
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Mobile navigation
+            const burger = document.querySelector('.burger');
+            const nav = document.querySelector('.nav-links');
+
+            if (burger) {
+                burger.addEventListener('click', function () {
+                    nav.classList.toggle('nav-active');
+                    this.classList.toggle('toggle');
+                });
+            }
+
+            // Step navigation (for multi-step form)
+            const steps = document.querySelectorAll('.step');
+            let currentStep = 0;
+
+            // This would require more complex implementation for a true multi-step form
+            // This is just a placeholder for future functionality
+        });
+    </script>
+</body>
+
+</html>

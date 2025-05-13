@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Requests - NGO Donation Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .requests-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .requests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .search-box {
+            flex: 1;
+            display: flex;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .request-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .request-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .request-header {
+            padding: 15px;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+
+        .request-header h3 {
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .urgent {
+            background-color: var(--danger-color);
+        }
+
+        .education {
+            background-color: var(--info-color);
+        }
+
+        .medical {
+            background-color: var(--warning-color);
+        }
+
+        .food {
+            background-color: var(--success-color);
+        }
+
+        .clothing {
+            background-color: var(--secondary-color);
+        }
+
+        .location {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .request-content {
+            padding: 15px;
+        }
+
+        .description {
+            margin-bottom: 15px;
+        }
+
+        .request-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .seeker-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seeker-info img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .request-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+
+        .posted-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .pagination a.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+        }
+
+        .create-request {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .create-request:hover {
+            transform: scale(1.1);
+        }
+
+        .create-request i {
+            font-size: 24px;
+        }
+
+        /* Modal styles for create request form */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin-bottom: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+        }
+
+        .form-btn {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <img src="logo-placeholder.png" alt="NGO Donation Bridge Logo">
+            <h1>NGO Donation Bridge</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="requests.html" class="active">Requests</a></li>
+            <li><a href="transparency.html">Transparency</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="login.html" class="login-btn">Login</a></li>
+            <li><a href="register.html" class="register-btn">Register</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <div class="hero small-hero">
+        <div class="hero-content">
+            <h1>Donation Requests</h1>
+            <p>Browse current donation requests from individuals and organizations in need</p>
+        </div>
+    </div>
+
+    <div class="requests-container">
+        <div class="requests-header">
+            <h2>Current Requests</h2>
+            <div class="search-box">
+                <input type="text" placeholder="Search requests...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="category">Category:</label>
+                <select id="category">
+                    <option value="all">All Categories</option>
+                    <option value="education">Education</option>
+                    <option value="medical">Medical</option>
+                    <option value="food">Food</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="shelter">Shelter</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="location">Location:</label>
+                <select id="location">
+                    <option value="all">All Locations</option>
+                    <option value="local">Local Only</option>
+                    <option value="national">National</option>
+                    <option value="international">International</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="urgency">Urgency:</label>
+                <select id="urgency">
+                    <option value="all">All</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sort">Sort By:</label>
+                <select id="sort">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="urgent">Most Urgent</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="requests-grid">
+            <!-- Request Card 1 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>School Supplies for Rural Children</h3>
+                    <span class="tag education">Education</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Nairobi, Kenya
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">We need school supplies for 50 children in rural Kenya. Items needed include
+                        notebooks, pens, pencils, and backpacks.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>Kenyan Rural Education NGO</span>
+                        </div>
+                        <span class="target">$2,500</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 2 days ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Request Card 2 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>Medical Supplies for Community Clinic</h3>
+                    <span class="tag medical urgent">Urgent</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Mumbai, India
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">Our community clinic urgently needs basic medical supplies to continue
+                        serving low-income families in Mumbai slums.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>Mumbai Health Initiative</span>
+                        </div>
+                        <span class="target">$5,000</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 5 days ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Request Card 3 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>Food Distribution for Homeless</h3>
+                    <span class="tag food">Food</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Los Angeles, USA
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">Help us provide meals for homeless individuals in downtown LA. We distribute
+                        200 meals weekly and need funding and volunteers.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>LA Homeless Support</span>
+                        </div>
+                        <span class="target">$1,800</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 1 week ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Request Card 4 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>Winter Clothing Drive</h3>
+                    <span class="tag clothing">Clothing</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Toronto, Canada
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">Collecting winter jackets, gloves, hats, and socks for refugee families
+                        facing their first Canadian winter.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>Welcome to Canada</span>
+                        </div>
+                        <span class="target">$3,200</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 3 days ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Request Card 5 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>Shelter Repair after Typhoon</h3>
+                    <span class="tag urgent">Urgent</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Manila, Philippines
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">A local shelter housing 30 families was damaged in the recent typhoon. We
+                        need funds for repairs and basic necessities.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>Philippines Relief Network</span>
+                        </div>
+                        <span class="target">$7,500</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 1 day ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+
+            <!-- Request Card 6 -->
+            <div class="request-card">
+                <div class="request-header">
+                    <h3>Computer Lab for Rural School</h3>
+                    <span class="tag education">Education</span>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> Bogotá, Colombia
+                    </div>
+                </div>
+                <div class="request-content">
+                    <p class="description">Help us establish a computer lab with 15 computers for a school serving 200
+                        children in rural Colombia.</p>
+                    <div class="request-meta">
+                        <div class="seeker-info">
+                            <img src="profile-placeholder.jpg" alt="Profile">
+                            <span>Digital Education Access</span>
+                        </div>
+                        <span class="target">$8,000</span>
+                    </div>
+                </div>
+                <div class="request-footer">
+                    <span class="posted-date">Posted 2 weeks ago</span>
+                    <a href="request-details.html" class="btn">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">&raquo;</a>
+        </div>
+    </div>
+
+    <!-- Create Request Button -->
+    <a href="#" class="create-request" id="createRequestBtn">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <!-- Create Request Modal -->
+    <div class="modal" id="createRequestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Donation Request</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="requestForm">
+                <div class="form-group">
+                    <label for="requestTitle">Request Title</label>
+                    <input type="text" id="requestTitle" required placeholder="E.g. School Supplies for Children">
+                </div>
+                <div class="form-group">
+                    <label for="requestCategory">Category</label>
+                    <select id="requestCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="education">Education</option>
+                        <option value="medical">Medical</option>
+                        <option value="food">Food</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="shelter">Shelter</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="requestLocation">Location</label>
+                    <input type="text" id="requestLocation" required placeholder="City, Country">
+                </div>
+                <div class="form-group">
+                    <label for="requestAmount">Target Amount (USD)</label>
+                    <input type="number" id="requestAmount" required placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="requestUrgency">Urgency</label>
+                    <select id="requestUrgency" required>
+                        <option value="normal">Normal</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="requestDesc">Description</label>
+                    <textarea id="requestDesc" required
+                        placeholder="Describe your request in detail. What is needed? Who will benefit? How will the donations be used?"></textarea>
+                </div>
+                <button type="submit" class="btn primary form-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>About NGO Donation Bridge</h3>
+                <p>We connect donors directly with those in need, ensuring transparency and maximizing impact.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="requests.html">Requests</a></li>
+                    <li><a href="transparency.html">Transparency</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section newsletter">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p>Stay updated with the latest needs and success stories.</p>
+                <form>
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 NGO Donation Bridge. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle mobile menu
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('nav-active');
+            burger.classList.toggle('toggle');
+        });
+
+        // Modal functionality
+        const createRequestBtn = document.getElementById('createRequestBtn');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modal = document.getElementById('createRequestModal');
+
+        createRequestBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        const requestForm = document.getElementById('requestForm');
+
+        requestForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically handle the form submission with AJAX
+            // For now, just show an alert and close the modal
+            alert('Your request has been submitted and is pending review.');
+            modal.style.display = 'none';
+            requestForm.reset();
+        });
+
+        // Filter functionality
+        const categoryFilter = document.getElementById('category');
+        const locationFilter = document.getElementById('location');
+        const urgencyFilter = document.getElementById('urgency');
+        const sortFilter = document.getElementById('sort');
+
+        // Add event listeners to filters
+        [categoryFilter, locationFilter, urgencyFilter, sortFilter].forEach(filter => {
+            filter.addEventListener('change', applyFilters);
+        });
+
+        function applyFilters() {
+            // In a real application, this would make an AJAX request to the server
+            // with the filter parameters and update the results
+            console.log('Filters applied');
+            console.log('Category:', categoryFilter.value);
+            console.log('Location:', locationFilter.value);
+            console.log('Urgency:', urgencyFilter.value);
+            console.log('Sort By:', sortFilter.value);
+        }
+
+        // Search functionality
+        const searchBox = document.querySelector('.search-box input');
+        const searchBtn = document.querySelector('.search-box button');
+
+        searchBtn.addEventListener('click', performSearch);
+        searchBox.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            // In a real application, this would make an AJAX request to the server
+            // with the search query and update the results
+            console.log('Search query:', searchBox.value);
+        }
+    </script>
+</body>
+
+</html>
